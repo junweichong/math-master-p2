@@ -27,25 +27,36 @@
 
                 <!-- Left: Mode Selection -->
                 <div class="menu-section section-left">
-                    <h2 class="section-title">Level 1</h2>
-                    <div class="button-row mode-row">
-                        <button class="btn btn-mode" data-mode="subitizing">Subitizing</button>
-                        <button class="btn btn-mode" data-mode="addition10">Addition<br>(10)</button>
-                        <button class="btn btn-mode" data-mode="subtraction10">Subtraction<br>(10)</button>
+                    <div class="level-header">
+                        <div class="level-nav">
+                            <button id="level-prev" class="btn-icon">&lt;</button>
+                            <h2 id="level-title" class="section-title">Level 1</h2>
+                            <button id="level-next" class="btn-icon">&gt;</button>
+                        </div>
                     </div>
 
-                    <h2 class="section-title">Level 2</h2>
-                    <div class="button-row mode-row">
-                        <button class="btn btn-mode" data-mode="addition">Addition<br>(20)</button>
-                        <button class="btn btn-mode" data-mode="subtraction">Subtraction<br>(20)</button>
-                        <button class="btn btn-mode active" data-mode="mixed">Mixed (+-)</button>
+                    <div id="level-1-modes" class="level-group active">
+                        <div class="button-row mode-row">
+                            <button class="btn btn-mode" data-mode="subitizing">Subitizing</button>
+                            <button class="btn btn-mode" data-mode="addition10">Addition<br>(10)</button>
+                            <button class="btn btn-mode" data-mode="subtraction10">Subtraction<br>(10)</button>
+                        </div>
                     </div>
 
-                    <h2 class="section-title">Level 3</h2>
-                    <div class="button-row mode-row">
-                        <button class="btn btn-mode" data-mode="mult2" disabled>Multiply<br>(2)</button>
-                        <button class="btn btn-mode" data-mode="mult5" disabled>Multiply<br>(5)</button>
-                        <button class="btn btn-mode" data-mode="mult10" disabled>Multiply<br>(10)</button>
+                    <div id="level-2-modes" class="level-group">
+                        <div class="button-row mode-row">
+                            <button class="btn btn-mode" data-mode="addition">Addition<br>(20)</button>
+                            <button class="btn btn-mode" data-mode="subtraction">Subtraction<br>(20)</button>
+                            <button class="btn btn-mode" data-mode="mixed">Mixed (+-)</button>
+                        </div>
+                    </div>
+
+                    <div id="level-3-modes" class="level-group">
+                        <div class="button-row mode-row">
+                            <button class="btn btn-mode" data-mode="mult2" disabled>Multiply<br>(2)</button>
+                            <button class="btn btn-mode" data-mode="mult5" disabled>Multiply<br>(5)</button>
+                            <button class="btn btn-mode" data-mode="mult10" disabled>Multiply<br>(10)</button>
+                        </div>
                     </div>
                 </div>
 

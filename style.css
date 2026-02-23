@@ -581,6 +581,34 @@ input[type="text"]:focus {
     padding: 1rem;
 }
 
+/* Level Selection Styles */
+.level-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 10px;
+}
+
+.level-nav {
+    display: grid;
+    grid-template-columns: 30px 1fr 30px;
+    align-items: center;
+    flex: 1;
+    gap: 5px;
+}
+
+.level-nav .section-title {
+    margin-bottom: 0;
+}
+
+.level-group {
+    display: none;
+}
+
+.level-group.active {
+    display: block;
+}
+
 .time-select-container,
 .mode-select-container {
     width: 100%;

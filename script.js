@@ -18,7 +18,7 @@ const db = getFirestore(app);
 // Game State
 const state = {
     screen: 'menu', // menu, playing, gameover
-    mode: 'mixed', // addition, subtraction, mixed
+    mode: 'subitizing',
     playerName: '',
     score: 0,
     timeRemaining: 0,
@@ -27,7 +27,8 @@ const state = {
     operator: '+',
     userAnswer: '',
     timerInterval: null,
-    scoreDisplayMode: 'mixed'
+    scoreDisplayMode: 'subitizing',
+    currentLevel: 1 // Level 1, 2, or 3
 };
 
 // Config
@@ -57,7 +58,8 @@ const dom = {
     gameInput: document.getElementById('game-input'),
     gameForm: document.getElementById('game-form'),
     finalScore: document.getElementById('final-score'),
-    resultPlayer: document.getElementById('result-player')
+    resultPlayer: document.getElementById('result-player'),
+    levelTitle: document.getElementById('level-title')
 };
 
 // Audio
@@ -107,6 +109,10 @@ function setupEventListeners() {
 
     // Quit Game
     document.getElementById('btn-quit').addEventListener('click', () => showScreen('menu'));
+
+    // Level Navigation
+    document.getElementById('level-prev').addEventListener('click', () => rotateLevel(-1));
+    document.getElementById('level-next').addEventListener('click', () => rotateLevel(1));
 
     // Home Button
     document.getElementById('btn-home').addEventListener('click', () => showScreen('menu'));
@@ -384,6 +390,22 @@ function rotateScoreDisplay(dir) {
     loadScores();
 }
 
+function rotateLevel(dir) {
+    state.currentLevel = ((state.currentLevel - 1 + dir + 3) % 3) + 1;
+
+    // Default to the first mode of the new level
+    const currentGroup = document.getElementById(`level-${state.currentLevel}-modes`);
+    if (currentGroup) {
+        const firstModeBtn = currentGroup.querySelector('.btn-mode');
+        if (firstModeBtn) {
+            state.mode = firstModeBtn.dataset.mode;
+            state.scoreDisplayMode = state.mode;
+        }
+    }
+
+    updateMenuUI();
+}
+
 function renderHighScores(topScores) {
     const titles = {
         subitizing: 'Subitizing',
@@ -410,8 +432,17 @@ function renderHighScores(topScores) {
 }
 
 function updateMenuUI() {
+    // Update Mode Buttons
+    document.querySelectorAll('.btn-mode').forEach(btn => btn.classList.remove('active'));
     const modeBtn = document.querySelector(`[data-mode="${state.mode}"]`);
     if (modeBtn) modeBtn.classList.add('active');
+
+    // Update Level Display
+    dom.levelTitle.textContent = `Level ${state.currentLevel}`;
+    document.querySelectorAll('.level-group').forEach(group => group.classList.remove('active'));
+    const currentGroup = document.getElementById(`level-${state.currentLevel}-modes`);
+    if (currentGroup) currentGroup.classList.add('active');
+
     loadScores();
 }
 
