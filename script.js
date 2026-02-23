@@ -62,8 +62,11 @@ const dom = {
 
 // Audio
 const sfxCorrect = new Audio('sounds/ding.wav');
+const sfxWrong = new Audio('sounds/wrong.wav');
+
 // Fallback if file missing
-sfxCorrect.onerror = () => console.log("Audio file missing, skipping sound.");
+sfxCorrect.onerror = () => console.log("Correct sound missing.");
+sfxWrong.onerror = () => console.log("Wrong sound missing.");
 
 // Initialization
 function init() {
@@ -293,11 +296,19 @@ function checkAnswer() {
         }, 500);
     } else {
         dom.gameInput.classList.add('wrong');
+        sfxWrong.currentTime = 0;
+        sfxWrong.play().catch(e => { });
 
         // Level 1 modes (Practice) don't end on mistake
         const isLevel1 = ['subitizing', 'addition10', 'subtraction10'].includes(state.mode);
         if (!isLevel1) {
             setTimeout(() => endGame(), 800);
+        } else {
+            // Level 1: Clear input after delay to allow retry
+            setTimeout(() => {
+                dom.gameInput.value = '';
+                dom.gameInput.classList.remove('wrong');
+            }, 800);
         }
     }
     updateGameUI();
