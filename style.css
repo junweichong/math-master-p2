@@ -132,7 +132,7 @@ body {
 
 /* Typography */
 .title {
-    font-size: 4rem;
+    font-size: clamp(2.5rem, 10vw, 4rem);
     font-weight: 900;
     margin-bottom: 2rem;
     background: var(--primary-gradient);
@@ -384,8 +384,8 @@ input[type="text"]:focus {
 }
 
 .number-display {
-    width: 250px;
-    height: 250px;
+    width: clamp(100px, 40vw, 250px);
+    height: clamp(100px, 40vw, 250px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -599,7 +599,7 @@ input[type="text"]:focus {
 
 .btn-large {
     width: 100%;
-    font-size: 2.5rem;
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
     padding: 1.5rem;
     box-shadow: 0 10px 30px rgba(79, 172, 254, 0.4);
 }
