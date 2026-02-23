@@ -423,6 +423,10 @@ input[type="text"]:focus {
 .answer-box {
     min-width: clamp(100px, 35vw, 250px);
     height: clamp(60px, 15vh, 100px);
+    background: white;
+    border-radius: 1.5rem;
+    display: block;
+    text-align: center;
     font-size: clamp(2rem, 10vw, 4rem);
     font-weight: bold;
     box-shadow: var(--shadow);
