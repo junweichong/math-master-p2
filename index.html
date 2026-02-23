@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Math Master</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Background Elements -->
+        <div class="circles">
+            <div class="circle circle-1"></div>
+            <div class="circle circle-2"></div>
+            <div class="circle circle-3"></div>
+        </div>
+
+        <!-- Menu Screen -->
+        <div id="screen-menu" class="screen active">
+            <!-- Tablet Layout Grid -->
+            <div class="menu-layout">
+
+                <!-- Left: Mode Selection -->
+                <div class="menu-section section-left">
+                    <h2 class="section-title">Level 1</h2>
+                    <div class="button-row mode-row">
+                        <button class="btn btn-mode" data-mode="subitizing">Subitizing</button>
+                        <button class="btn btn-mode" data-mode="addition10">Addition<br>(10)</button>
+                        <button class="btn btn-mode" data-mode="subtraction10">Subtraction<br>(10)</button>
+                    </div>
+
+                    <h2 class="section-title">Level 2</h2>
+                    <div class="button-row mode-row">
+                        <button class="btn btn-mode" data-mode="addition">Addition<br>(20)</button>
+                        <button class="btn btn-mode" data-mode="subtraction">Subtraction<br>(20)</button>
+                        <button class="btn btn-mode active" data-mode="mixed">Mixed (+-)</button>
+                    </div>
+
+                    <h2 class="section-title">Level 3</h2>
+                    <div class="button-row mode-row">
+                        <button class="btn btn-mode" data-mode="mult2" disabled>Multiply<br>(2)</button>
+                        <button class="btn btn-mode" data-mode="mult5" disabled>Multiply<br>(5)</button>
+                        <button class="btn btn-mode" data-mode="mult10" disabled>Multiply<br>(10)</button>
+                    </div>
+                </div>
+
+                <!-- Center: Player & Start -->
+                <div class="menu-section section-center">
+                    <div class="game-logo">Math Master</div>
+
+                    <div class="input-group">
+                        <label>Player Name</label>
+                        <input type="text" id="player-name" placeholder="Enter Name" maxlength="15" autocomplete="off">
+                    </div>
+
+
+
+                    <button id="btn-start" class="btn btn-primary btn-large">Start Game</button>
+                </div>
+
+                <!-- Right: High Scores -->
+                <div class="menu-section section-right">
+                    <div class="score-header">
+                        <div class="score-nav">
+                            <button id="score-prev" class="btn-icon">&lt;</button>
+                            <h3 id="score-title">High Scores</h3>
+                            <button id="score-next" class="btn-icon">&gt;</button>
+                        </div>
+                    </div>
+                    <ul id="score-list">
+                        <!-- Scores populated by JS -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="screen-game" class="screen">
+            <div class="game-header">
+                <div class="player-info">
+                    <span id="game-player-name">Player: Name</span>
+                    <span id="game-score">Score: 0</span>
+                </div>
+                <div id="game-timer" class="timer">Time: 02:00</div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-display">
+                    <div id="num1-container" class="number-display"></div>
+                    <div id="operator">+</div>
+                    <div id="num2-container" class="number-display"></div>
+                </div>
+
+                <form id="game-form" class="answer-box-wrapper">
+                    <input type="tel" id="game-input" class="answer-box" placeholder="?" maxlength="3"
+                        autocomplete="off">
+                </form>
+            </div>
+
+            <button id="btn-quit" class="btn btn-secondary">Quit</button>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="screen-gameover" class="screen">
+            <h1 class="title">Game Over!</h1>
+            <div class="result-card">
+                <p class="result-player" id="result-player">Good job, Player!</p>
+                <div class="result-score">
+                    <span>Score</span>
+                    <span id="final-score">0</span>
+                </div>
+            </div>
+            <button id="btn-home" class="btn btn-primary btn-large">Home</button>
+        </div>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="sfx-correct" src="sounds/correct.wav" preload="auto"></audio>
+    <!-- Note: Assuming correct.wav exists or using fallback -->
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    </script>
+
+    <script type="module" src="script.js"></script>
+</body>
+
+</html>
