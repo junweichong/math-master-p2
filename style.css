@@ -379,7 +379,7 @@ input[type="text"]:focus {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 2rem;
+    gap: clamp(0.5rem, 5vw, 2rem);
     margin-bottom: 2rem;
 }
 
