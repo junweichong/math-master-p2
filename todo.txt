@@ -1,3 +1,0 @@
-1. Push code to git
-2. Add in a subitizing mode
-3. Display high scores using data on firebase

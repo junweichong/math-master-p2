@@ -13,6 +13,13 @@
     --font-family: 'Outfit', sans-serif;
 }
 
+:root.theme-challenge {
+    --primary-color: #e57373;
+    /* Darkish pastel red */
+    --primary-gradient: linear-gradient(135deg, #e57373 0%, #ff8a80 100%);
+    --shadow: 0 8px 32px 0 rgba(135, 31, 31, 0.15);
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -20,6 +27,7 @@
     -webkit-tap-highlight-color: transparent;
     user-select: none;
     /* Prevent text selection on touch */
+    transition: background-color 0.5s ease, background 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
 }
 
 body {
@@ -162,16 +170,44 @@ input[type="text"] {
     border-radius: 1rem;
     background: var(--glass-bg);
     font-family: var(--font-family);
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     text-align: center;
     outline: none;
     transition: all 0.3s ease;
     box-shadow: var(--shadow);
 }
 
-input[type="text"]:focus {
+.input-row {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.input-row input {
+    flex: 3;
+}
+
+.dropdown {
+    flex: 1;
+    padding: 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-radius: 1rem;
+    background: var(--glass-bg);
+    font-family: var(--font-family);
+    font-size: 1.2rem;
+    text-align: center;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+input[type="text"]:focus,
+.dropdown:focus {
     border-color: #4facfe;
     transform: scale(1.02);
+    background: white;
 }
 
 /* Buttons */
@@ -366,6 +402,49 @@ input[type="text"]:focus {
     font-family: monospace;
 }
 
+/* Toggle Switch */
+.toggle-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 6rem;
+}
+
+.toggle-group {
+    display: flex;
+    background: rgba(0, 0, 0, 0.05);
+    padding: 4px;
+    border-radius: 12px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-toggle {
+    border: none;
+    background: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: var(--font-family);
+    font-weight: 700;
+    font-size: 1rem;
+    color: #777;
+    transition: all 0.3s ease;
+}
+
+.btn-toggle.active {
+    background: white;
+    color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.toggle-blurb {
+    font-size: 0.9rem;
+    color: #636e72;
+    font-weight: 500;
+    text-align: center;
+}
+
 /* Question Area */
 .question-container {
     display: flex;
@@ -418,6 +497,19 @@ input[type="text"]:focus {
     font-size: clamp(2rem, 15vw, 6rem);
     color: var(--secondary-color);
     font-weight: 900;
+}
+
+.question-text {
+    font-size: clamp(1.8rem, 6vw, 3.5rem);
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    font-weight: normal;
+    color: var(--text-color);
+    text-align: center;
+    padding: 0.5rem;
+    line-height: 1.2;
+    display: none;
+    max-width: 95vw;
+    margin: 0 auto;
 }
 
 .answer-box {
@@ -540,13 +632,13 @@ input[type="text"]:focus {
     width: 100%;
     height: 100%;
     padding: 1rem;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .menu-section {
     background: var(--glass-bg);
     border-radius: 1.5rem;
-    padding: 1.5rem;
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
     height: 90%;
     display: flex;
     flex-direction: column;
@@ -555,36 +647,34 @@ input[type="text"]:focus {
 }
 
 .section-left {
-    justify-content: center;
+    justify-content: flex-start;
     overflow-y: auto;
-    /* Allow scrolling if options don't fit */
+    min-height: 300px;
     height: auto;
-    /* Shrink to fit content */
     align-self: flex-start;
-    /* Align to top */
-    padding: 1rem;
-    /* Reduced padding */
 }
 
 .section-center {
     background: transparent;
     box-shadow: none;
     border: none;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+    padding-top: 2rem;
+    /* Matches .menu-section padding-top */
 }
 
 .section-right {
     height: auto;
-    /* Shrink to fit content */
     align-self: flex-start;
-    padding: 1rem;
+    justify-content: flex-start;
 }
 
 /* Level Selection Styles */
 .level-header {
     display: flex;
     align-items: center;
+    margin-top: 0;
     margin-bottom: 1rem;
     gap: 10px;
 }
@@ -639,6 +729,11 @@ input[type="text"]:focus {
     box-shadow: 0 10px 30px rgba(79, 172, 254, 0.4);
 }
 
+.score-header {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
 /* High Scores List adjustments */
 #score-list {
     width: 100%;
@@ -674,11 +769,21 @@ input[type="text"]:focus {
     width: 100%;
 }
 
+#app {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.5s ease;
+}
+
 .mode-row .btn-mode {
     padding: 0.8rem 0.2rem;
     font-size: 0.85rem;
     width: 100%;
-    min-height: 3.5rem;
+    min-height: 4rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -711,6 +816,7 @@ input[type="text"]:focus {
 .input-group label {
     display: block;
     font-size: 1.5rem;
+    margin-top: 0;
     margin-bottom: 1rem;
     /* Standardized spacing */
     color: var(--text-color);

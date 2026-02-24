@@ -22,6 +22,7 @@
 
         <!-- Menu Screen -->
         <div id="screen-menu" class="screen active">
+
             <!-- Tablet Layout Grid -->
             <div class="menu-layout">
 
@@ -30,43 +31,60 @@
                     <div class="level-header">
                         <div class="level-nav">
                             <button id="level-prev" class="btn-icon">&lt;</button>
-                            <h2 id="level-title" class="section-title">Level 1</h2>
+                            <h2 id="level-title" class="section-title">Plus and Minus</h2>
                             <button id="level-next" class="btn-icon">&gt;</button>
                         </div>
                     </div>
 
-                    <div id="level-1-modes" class="level-group active">
+                    <div id="group-number-sense" class="level-group active">
                         <div class="button-row mode-row">
                             <button class="btn btn-mode" data-mode="subitizing">Subitizing</button>
-                            <button class="btn btn-mode" data-mode="addition10">Addition<br>(10)</button>
-                            <button class="btn btn-mode" data-mode="subtraction10">Subtraction<br>(10)</button>
+                            <button class="btn btn-mode" data-mode="placerace">Place Race</button>
+                            <button class="btn btn-mode" data-mode="patterns">Number Patterns</button>
                         </div>
                     </div>
 
-                    <div id="level-2-modes" class="level-group">
+                    <div id="group-plus-minus" class="level-group">
                         <div class="button-row mode-row">
+                            <button class="btn btn-mode" data-mode="addition10">Addition<br>(10)</button>
+                            <button class="btn btn-mode" data-mode="subtraction10">Subtraction<br>(10)</button>
                             <button class="btn btn-mode" data-mode="addition">Addition<br>(20)</button>
                             <button class="btn btn-mode" data-mode="subtraction">Subtraction<br>(20)</button>
                             <button class="btn btn-mode" data-mode="mixed">Mixed (+-)</button>
-                        </div>
-                    </div>
-
-                    <div id="level-3-modes" class="level-group">
-                        <div class="button-row mode-row">
-                            <button class="btn btn-mode" data-mode="mult2" disabled>Multiply<br>(2)</button>
-                            <button class="btn btn-mode" data-mode="mult5" disabled>Multiply<br>(5)</button>
-                            <button class="btn btn-mode" data-mode="mult10" disabled>Multiply<br>(10)</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Center: Player & Start -->
                 <div class="menu-section section-center">
+                    <!-- Mode Toggle -->
+                    <div class="toggle-container">
+                        <div class="toggle-group">
+                            <button class="btn-toggle btn-toggle-practice">Practice</button>
+                            <button class="btn-toggle btn-toggle-challenge active">Challenge</button>
+                        </div>
+                        <p class="toggle-blurb">Mistakes end the game. Aim for high scores!</p>
+                    </div>
+
                     <div class="game-logo">Math Master</div>
 
                     <div class="input-group">
-                        <label>Player Name</label>
-                        <input type="text" id="player-name" placeholder="Enter Name" maxlength="15" autocomplete="off">
+                        <label>Player Name & Class</label>
+                        <div class="input-row">
+                            <input type="text" id="player-name" placeholder="Enter Name" maxlength="15"
+                                autocomplete="off">
+                            <select id="player-class" class="dropdown">
+                                <option value="2A">2A</option>
+                                <option value="2C">2C</option>
+                                <option value="2D">2D</option>
+                                <option value="2E">2E</option>
+                                <option value="2J">2J</option>
+                                <option value="2O">2O</option>
+                                <option value="2P">2P</option>
+                                <option value="2R">2R</option>
+                                <option value="2S">2S</option>
+                            </select>
+                        </div>
                     </div>
 
 
@@ -92,6 +110,7 @@
 
         <!-- Game Screen -->
         <div id="screen-game" class="screen">
+
             <div class="game-header">
                 <div class="player-info">
                     <span id="game-player-name">Player: Name</span>
@@ -105,6 +124,7 @@
                     <div id="num1-container" class="number-display"></div>
                     <div id="operator">+</div>
                     <div id="num2-container" class="number-display"></div>
+                    <div id="question-text-display" class="question-text"></div>
                 </div>
 
                 <form id="game-form" class="answer-box-wrapper">
