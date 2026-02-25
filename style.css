@@ -10,7 +10,7 @@
     --glass-bg: rgba(255, 255, 255, 0.7);
     --glass-border: rgba(255, 255, 255, 0.5);
     --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-    --font-family: 'Outfit', sans-serif;
+    --font-family: 'Comic Neue', cursive;
 }
 
 :root.theme-challenge {
@@ -18,6 +18,12 @@
     /* Darkish pastel red */
     --primary-gradient: linear-gradient(135deg, #e57373 0%, #ff8a80 100%);
     --shadow: 0 8px 32px 0 rgba(135, 31, 31, 0.15);
+}
+
+:root.theme-challenge .top-banner {
+    background-color: #ffebee;
+    color: #d32f2f;
+    border-color: #ffcdd2;
 }
 
 * {
@@ -123,8 +129,9 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 2rem;
+    justify-content: flex-start;
+    padding: 12vh 2rem 2rem 2rem;
+    overflow-y: auto;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.4s ease;
@@ -136,6 +143,25 @@ body {
     opacity: 1;
     pointer-events: all;
     z-index: 10;
+}
+
+/* Banner */
+.top-banner {
+    position: absolute;
+    top: 6vh;
+    left: 0;
+    transform: translateY(-50%);
+    width: 100%;
+    background-color: #e3f2fd;
+    color: #1e88e5;
+    padding: 1vh 0;
+    text-align: center;
+    font-weight: 700;
+    font-size: clamp(1rem, 3vh, 1.3rem);
+    box-shadow: 0 4px 15px rgba(30, 136, 229, 0.1);
+    z-index: 100;
+    border-top: 2px solid #bbdefb;
+    border-bottom: 2px solid #bbdefb;
 }
 
 /* Typography */
@@ -338,7 +364,8 @@ input[type="text"]:focus,
 
 #score-list {
     list-style: none;
-    min-height: 150px;
+    overflow-y: auto;
+    flex: 1;
 }
 
 .score-item {
@@ -407,8 +434,8 @@ input[type="text"]:focus,
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.8rem;
-    margin-bottom: 6rem;
+    gap: 1vh;
+    margin-bottom: 4vh;
 }
 
 .toggle-group {
@@ -501,7 +528,7 @@ input[type="text"]:focus,
 
 .question-text {
     font-size: clamp(1.8rem, 6vw, 3.5rem);
-    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    font-family: 'Comic Neue', cursive;
     font-weight: normal;
     color: var(--text-color);
     text-align: center;
@@ -638,8 +665,11 @@ input[type="text"]:focus,
 .menu-section {
     background: var(--glass-bg);
     border-radius: 1.5rem;
-    padding: 2rem 1.5rem 1.5rem 1.5rem;
-    height: 90%;
+    padding: 0.8rem 1rem;
+    height: 270px;
+    /* Perfect fit for 5 scores without scrolling */
+    min-height: 270px;
+    max-height: 270px;
     display: flex;
     flex-direction: column;
     box-shadow: var(--shadow);
@@ -648,9 +678,8 @@ input[type="text"]:focus,
 
 .section-left {
     justify-content: flex-start;
-    overflow-y: auto;
-    min-height: 300px;
-    height: auto;
+    overflow: hidden;
+    /* Container doesn't scroll, inner list does */
     align-self: flex-start;
 }
 
@@ -660,13 +689,13 @@ input[type="text"]:focus,
     border: none;
     justify-content: flex-start;
     align-items: center;
-    padding-top: 2rem;
-    /* Matches .menu-section padding-top */
+    padding-top: 0;
+    /* Removed hardcoded vertical offset */
 }
 
 .section-right {
     height: auto;
-    align-self: flex-start;
+    align-self: stretch;
     justify-content: flex-start;
 }
 
@@ -675,7 +704,7 @@ input[type="text"]:focus,
     display: flex;
     align-items: center;
     margin-top: 0;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     gap: 10px;
 }
 
