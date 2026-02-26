@@ -777,16 +777,37 @@ input[type="text"]:focus,
         height: auto;
         padding: 1rem 0;
         overflow-y: auto;
+        gap: 1rem;
     }
 
     .menu-section {
         width: 100%;
         height: auto;
-        margin-bottom: 1rem;
+        min-height: unset;
+        max-height: unset;
+        margin-bottom: 0;
+    }
+
+    /* Reorder sections for mobile: Left -> Center -> Right */
+    .section-left { order: 1; }
+    .section-center { order: 2; margin-bottom: 1rem; }
+    .section-right { 
+        order: 3; 
+        max-height: 300px; 
+    }
+
+    #score-list {
+        max-height: 200px;
+        overflow-y: auto;
     }
 
     .game-logo {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-large {
+        padding: 1.2rem;
     }
 }
 
