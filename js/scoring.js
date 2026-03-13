@@ -8,30 +8,18 @@ const CACHE_EXPIRY = 60 * 60 * 1000; // 1 hour
 const pendingFetches = new Map(); // Prevent duplicate concurrent requests
 export async function loadAggregatedScores() {
     const leaderboardId = `${state.scoreDisplayMode}_${state.scoreDisplayType}`;
-    console.group(`[Firestore] Loading Leaderboard: ${leaderboardId}`);
     
     try {
-        if (!state.scoreDisplayMode || !state.scoreDisplayType) {
-            console.warn("[Firestore] Missing state for loading scores:", { mode: state.scoreDisplayMode, type: state.scoreDisplayType });
-        }
-
         const docRef = doc(db, "leaderboards", leaderboardId);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-            const data = docSnap.data();
-            console.log(`[Firestore] Data found! Count: ${data.topScores?.length || 0}`);
-            console.groupEnd();
-            return data.topScores || [];
+            return docSnap.data().topScores || [];
         } else {
-            console.log("[Firestore] No document exists yet for this mode.");
-            console.groupEnd();
             return [];
         }
     } catch (e) {
-        console.error(`[Firestore] LOAD ERROR:`, e);
-        console.groupEnd();
-        // Don't alert on load error unless it's persistent, to avoid spam
+        console.error(`[Firestore] Load Error:`, e);
         throw e;
     }
 }
@@ -49,21 +37,16 @@ export async function saveScore() {
     };
 
     try {
-        console.group(`[Firestore] Saving Score: ${state.playerName}`);
-        console.log("Entry Data:", newScoreEntry);
-
         // 1. Save FULL record for history (costs 1 write)
         await addDoc(collection(db, "scores"), {
             ...newScoreEntry,
             timestamp: serverTimestamp()
         });
-        console.log("[Firestore] Step 1/2: Full record saved successfully.");
         
         // 2. Update Aggregated Leaderboard (Top 5)
         const leaderboardId = `${state.mode}_${state.gameType}`;
         const docRef = doc(db, "leaderboards", leaderboardId);
         
-        console.log(`[Firestore] Step 2/2: Updating leaderboard ${leaderboardId}...`);
         const docSnap = await getDoc(docRef);
         let currentTopScores = [];
         
@@ -83,8 +66,6 @@ export async function saveScore() {
         
         // Save back to Firestore (costs 1 write)
         await setDoc(docRef, { topScores: currentTopScores });
-        console.log("[Firestore] Leaderboard updated successfully.");
-        console.groupEnd();
 
         // Update local cache
         const cacheKey = `${CACHE_KEY_PREFIX}${state.mode}_${state.gameType}`;
@@ -93,10 +74,9 @@ export async function saveScore() {
             timestamp: Date.now() 
         }));
         
+        console.log(`[Firestore] Leaderboard ${leaderboardId} updated.`);
     } catch (e) {
-        console.error(`[Firestore] SAVE ERROR:`, e);
-        console.groupEnd();
-        alert(`Failed to save score! Please check your internet or contact admin.\n\nError: ${e.message}`);
+        console.error(`[Firestore] Save Error:`, e);
     }
 }
 
