@@ -162,6 +162,24 @@ body {
     z-index: 100;
     border-top: 2px solid #bbdefb;
     border-bottom: 2px solid #bbdefb;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.banner-text {
+    display: inline-block;
+    padding-left: 100%;
+    animation: marquee 25s linear infinite;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
 }
 
 /* Typography */
@@ -360,6 +378,13 @@ input[type="text"]:focus,
     cursor: pointer;
     color: var(--primary-color);
     padding: 0.2rem;
+    transition: all 0.2s ease;
+}
+
+.btn-icon:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    color: #999;
 }
 
 #score-list {
@@ -789,11 +814,18 @@ input[type="text"]:focus,
     }
 
     /* Reorder sections for mobile: Left -> Center -> Right */
-    .section-left { order: 1; }
-    .section-center { order: 2; margin-bottom: 1rem; }
-    .section-right { 
-        order: 3; 
-        max-height: 300px; 
+    .section-left {
+        order: 1;
+    }
+
+    .section-center {
+        order: 2;
+        margin-bottom: 1rem;
+    }
+
+    .section-right {
+        order: 3;
+        max-height: 300px;
     }
 
     #score-list {

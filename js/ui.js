@@ -31,12 +31,16 @@ export function showScreen(screenName) {
 }
 
 export function updateMenuUI() {
-    // Determine which group we are in
-    const modesInNumberSense = ['subitizing', 'placerace', 'patterns'];
-    if (modesInNumberSense.includes(state.mode)) {
-        state.currentGroup = 'Number Sense';
-    } else {
+    if (state.gameType === 'challenge') {
+        state.mode = 'mixed';
         state.currentGroup = 'Plus and Minus';
+    } else {
+        const modesInNumberSense = ['subitizing', 'placerace', 'patterns'];
+        if (modesInNumberSense.includes(state.mode)) {
+            state.currentGroup = 'Number Sense';
+        } else {
+            state.currentGroup = 'Plus and Minus';
+        }
     }
 
     // Update Title
@@ -47,8 +51,17 @@ export function updateMenuUI() {
     dom.groupNumberSense.classList.toggle('active', isNumberSense);
     dom.groupPlusMinus.classList.toggle('active', !isNumberSense);
 
-    // Update Button Highlights
-    document.querySelectorAll('.btn-mode').forEach(btn => btn.classList.remove('active'));
+    // Update Button Highlights and Disabled State
+    document.querySelectorAll('.btn-mode').forEach(btn => {
+        btn.classList.remove('active');
+        btn.style.display = 'block';
+        if (state.gameType === 'challenge') {
+            btn.disabled = btn.dataset.mode !== 'mixed';
+        } else {
+            btn.disabled = false;
+        }
+    });
+
     const modeBtn = document.querySelector(`[data-mode="${state.mode}"]`);
     if (modeBtn) modeBtn.classList.add('active');
 
@@ -184,8 +197,21 @@ export function updateToggleUI() {
             : "Unlimited mistakes. Practice without pressure.";
     });
 
+    // Handle disabled state of navigation
+    if (isChallenge) {
+        dom.levelPrev.disabled = true;
+        dom.levelNext.disabled = true;
+        dom.levelPrev.style.visibility = 'visible';
+        dom.levelNext.style.visibility = 'visible';
+    } else {
+        dom.levelPrev.disabled = false;
+        dom.levelNext.disabled = false;
+        dom.levelPrev.style.visibility = 'visible';
+        dom.levelNext.style.visibility = 'visible';
+    }
+
     state.scoreDisplayType = state.gameType;
-    refreshHighScores();
+    updateMenuUI();
 }
 
 export function rotateMode(dir) {
