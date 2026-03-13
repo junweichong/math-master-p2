@@ -44,35 +44,41 @@ export async function loadScores() {
 
 export async function saveScore() {
     const today = new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
-    const newScoreEntry = {
+    
+    // 1. Full entry for Firestore (private)
+    const dbEntry = {
         name: state.playerName,
         class: state.playerClass,
         score: state.score,
         mode: state.mode,
         type: state.gameType,
         date: today,
-        timestamp: Date.now() // Use local time for immediate cache update
+        timestamp: serverTimestamp()
+    };
+
+    // 2. Minimal entry for public cache/display
+    const displayEntry = {
+        name: state.playerName,
+        score: state.score,
+        date: today
     };
 
     try {
         // Save to DB (costs 1 write)
-        await addDoc(collection(db, "scores"), {
-            ...newScoreEntry,
-            timestamp: serverTimestamp() // Override with server time for DB consistency
-        });
+        await addDoc(collection(db, "scores"), dbEntry);
         
-        // UPGRADE: Instead of removing cache, we update it locally!
+        // UPGRADE: Update local cache with minimal data
         const cacheKey = `${CACHE_KEY_PREFIX}${state.mode}_${state.gameType}`;
         const cached = localStorage.getItem(cacheKey);
         
         if (cached) {
             let { scores, timestamp } = JSON.parse(cached);
-            scores.push(newScoreEntry);
+            scores.push(displayEntry);
             scores.sort((a, b) => b.score - a.score);
             scores = scores.slice(0, CONFIG.MAX_HIGH_SCORES);
             
             localStorage.setItem(cacheKey, JSON.stringify({ scores, timestamp }));
-            console.log("Local highscore cache updated (0 reads needed).");
+            console.log("Local highscore cache updated (minimal data).");
         }
     } catch (e) {
         console.error("Error saving score:", e);

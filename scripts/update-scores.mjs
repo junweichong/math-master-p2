@@ -36,11 +36,8 @@ async function updateScores() {
 
             const scores = [];
             snapshot.forEach(doc => {
-                const data = doc.data();
-                // We don't need the Firestore timestamp object in the JSON
-                const cleanData = { ...data };
-                if (cleanData.timestamp) delete cleanData.timestamp;
-                scores.push(cleanData);
+                const { name, score, date } = doc.data();
+                scores.push({ name, score, date });
             });
 
             allResults[mode][type] = scores;
