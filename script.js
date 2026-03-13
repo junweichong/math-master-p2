@@ -7,9 +7,7 @@ import { startGame, checkAnswer } from "./js/game.js";
 // Initialization
 function init() {
     preloadAssets();
-    refreshHighScores();
     setupEventListeners();
-    updateMenuUI();
     updateToggleUI();
     updateStartButtonState();
 }
