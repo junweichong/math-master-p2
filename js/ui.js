@@ -1,8 +1,15 @@
 import { state } from "./state.js";
 import { dom, screens } from "./dom.js";
+import { loadAggregatedScores } from "./scoring.js";
 
 export async function refreshHighScores() {
-    renderHighScores([]);
+    dom.scoreList.innerHTML = '<li class="score-item" style="justify-content:center; color:#aaa;">Loading scores...</li>';
+    try {
+        const topScores = await loadAggregatedScores();
+        renderHighScores(topScores);
+    } catch (e) {
+        dom.scoreList.innerHTML = '<li class="score-item" style="justify-content:center; color:#e74c3c;">Error loading scores</li>';
+    }
 }
 
 export function showScreen(screenName) {
@@ -81,7 +88,17 @@ export function renderHighScores(topScores) {
     const typeLabel = state.scoreDisplayType.charAt(0).toUpperCase() + state.scoreDisplayType.slice(1);
     dom.scoreTitle.innerHTML = `High Scores (${typeLabel})<br><span class="score-mode">${titles[state.scoreDisplayMode] || state.scoreDisplayMode}</span>`;
 
-    dom.scoreList.innerHTML = '<li class="score-item" style="justify-content:center; text-align:center; color:#636e72; padding: 2rem 1rem; font-weight: 700;">High scores are being calculated. Check back later!</li>';
+    dom.scoreList.innerHTML = topScores.map((s, i) => `
+        <li class="score-item">
+            <span class="score-rank">${i + 1}.</span>
+            <span class="score-name">${s.name}</span>
+            <span class="score-val">${s.score}</span>
+        </li>
+    `).join('');
+
+    if (topScores.length === 0) {
+        dom.scoreList.innerHTML = '<li class="score-item" style="justify-content:center; color:#aaa;">No scores yet</li>';
+    }
 }
 
 export function updateGameUI() {
