@@ -59,6 +59,7 @@ function setupEventListeners() {
         refreshHighScores();
     });
 
+
     // Level Navigation
     dom.levelPrev.addEventListener('click', () => rotateMode(-1));
     dom.levelNext.addEventListener('click', () => rotateMode(1));
