@@ -11,6 +11,7 @@ function init() {
     setupEventListeners();
     updateMenuUI();
     updateToggleUI();
+    updateStartButtonState();
 }
 
 function setupEventListeners() {
@@ -37,7 +38,8 @@ function setupEventListeners() {
 
     // Name & Class Listeners
     dom.playerNameInput.addEventListener('input', () => {
-        state.playerName = dom.playerNameInput.value;
+        state.playerName = dom.playerNameInput.value.trim();
+        updateStartButtonState();
     });
     dom.playerClassSelect.addEventListener('change', () => {
         state.playerClass = dom.playerClassSelect.value;
@@ -125,6 +127,11 @@ function setupEventListeners() {
             }
         }
     });
+}
+
+// Helper to manage start button state
+function updateStartButtonState() {
+    dom.btnStart.disabled = !state.playerName || state.playerName.trim() === '';
 }
 
 // Start

@@ -11,7 +11,9 @@ sfxCorrect.onerror = () => console.log("Correct sound missing.");
 sfxWrong.onerror = () => console.log("Wrong sound missing.");
 
 export function startGame() {
-    state.playerName = dom.playerNameInput.value.trim() || "Player 1";
+    state.playerName = dom.playerNameInput.value.trim();
+    if (!state.playerName) return; // Safety check
+
     state.score = 0;
     state.userAnswer = '';
     state.timeRemaining = CONFIG.TIME_2MIN;
