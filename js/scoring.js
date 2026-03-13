@@ -5,58 +5,41 @@ import { CONFIG } from "./config.js";
 
 const CACHE_KEY_PREFIX = "math_master_scores_";
 const CACHE_EXPIRY = 60 * 60 * 1000; // 1 hour
-const pendingFetches = new Map(); // Prevent duplicate concurrent requests
 
 export async function loadScores() {
     const cacheKey = `${CACHE_KEY_PREFIX}${state.scoreDisplayMode}_${state.scoreDisplayType}`;
     
-    // 1. Check if request is already in progress
-    if (pendingFetches.has(cacheKey)) return pendingFetches.get(cacheKey);
-
-    // 2. Check Cache
+    // 1. Check Local Cache (Immediate feedback from SaveScore)
     const cachedData = localStorage.getItem(cacheKey);
     if (cachedData) {
         const { scores, timestamp } = JSON.parse(cachedData);
+        // If it was updated in the last hour, trust it
         if (Date.now() - timestamp < CACHE_EXPIRY) {
             return scores;
         }
     }
 
-    // 3. Fetch from Firestore
-    const fetchPromise = (async () => {
-        try {
-            console.log(`[Firestore] Fetching: ${state.scoreDisplayMode} ${state.scoreDisplayType}`);
-            const q = query(
-                collection(db, "scores"),
-                where("mode", "==", state.scoreDisplayMode),
-                where("type", "==", state.scoreDisplayType),
-                orderBy("score", "desc"),
-                limit(CONFIG.MAX_HIGH_SCORES)
-            );
+    try {
+        console.log(`[Static] Fetching scores from JSON for ${state.scoreDisplayMode}`);
+        // 2. Fetch the static JSON file (0 Firestore reads!)
+        const response = await fetch('js/scores.json');
+        if (!response.ok) throw new Error("Could not load scores.json");
+        
+        const allScores = await response.json();
+        const scores = (allScores[state.scoreDisplayMode] && allScores[state.scoreDisplayMode][state.scoreDisplayType]) || [];
 
-            const querySnapshot = await getDocs(q);
-            const allScores = [];
-            querySnapshot.forEach((doc) => {
-                allScores.push(doc.data());
-            });
+        // 3. Cache it locally
+        localStorage.setItem(cacheKey, JSON.stringify({
+            scores: scores,
+            timestamp: Date.now()
+        }));
 
-            localStorage.setItem(cacheKey, JSON.stringify({
-                scores: allScores,
-                timestamp: Date.now()
-            }));
-
-            return allScores;
-        } catch (e) {
-            console.error("Error loading scores:", e);
-            if (cachedData) return JSON.parse(cachedData).scores;
-            throw e;
-        } finally {
-            pendingFetches.delete(cacheKey);
-        }
-    })();
-
-    pendingFetches.set(cacheKey, fetchPromise);
-    return fetchPromise;
+        return scores;
+    } catch (e) {
+        console.error("Error loading scores:", e);
+        if (cachedData) return JSON.parse(cachedData).scores;
+        return [];
+    }
 }
 
 export async function saveScore() {
