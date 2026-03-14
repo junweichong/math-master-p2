@@ -10,12 +10,18 @@ const sfxWrong = new Audio('sounds/wrong.wav');
 sfxCorrect.onerror = () => console.log("Correct sound missing.");
 sfxWrong.onerror = () => console.log("Wrong sound missing.");
 
+let isEnding = false;
+let isProcessingAnswer = false;
+
 export function startGame() {
     state.playerName = dom.playerNameInput.value.trim();
     if (!state.playerName) return; // Safety check
 
+    isEnding = false;
+    isProcessingAnswer = false;
     state.score = 0;
     state.userAnswer = '';
+    state.gameLog = [];
     state.timeRemaining = CONFIG.TIME_2MIN;
 
     updateGameUI();
@@ -120,14 +126,30 @@ export function generateQuestion() {
 
 
 export function checkAnswer() {
+    if (isProcessingAnswer || isEnding) return;
+
     state.userAnswer = dom.gameInput.value;
     if (state.userAnswer === '') return;
 
+    isProcessingAnswer = true;
     const userVal = parseInt(state.userAnswer);
     const correctVal = state.correctAnswer;
 
     if (userVal === correctVal) {
         state.score++;
+        const logEntry = {
+            num1: state.num1,
+            num2: state.num2,
+            operator: state.operator,
+            mode: state.mode,
+            questionText: state.currentQuestionText,
+            answer: userVal,
+            correctAnswer: state.correctAnswer,
+            correct: true,
+            timestamp: Date.now()
+        };
+        state.gameLog.push(logEntry);
+
         dom.gameInput.classList.add('correct');
         sfxCorrect.currentTime = 0;
         sfxCorrect.play().catch(e => { });
@@ -135,8 +157,22 @@ export function checkAnswer() {
         setTimeout(() => {
             generateQuestion();
             updateGameUI();
+            isProcessingAnswer = false;
         }, 500);
     } else {
+        const logEntry = {
+            num1: state.num1,
+            num2: state.num2,
+            operator: state.operator,
+            mode: state.mode,
+            questionText: state.currentQuestionText,
+            answer: userVal,
+            correctAnswer: state.correctAnswer,
+            correct: false,
+            timestamp: Date.now()
+        };
+        state.gameLog.push(logEntry);
+
         dom.gameInput.classList.add('wrong');
         sfxWrong.currentTime = 0;
         sfxWrong.play().catch(e => { });
@@ -147,6 +183,7 @@ export function checkAnswer() {
             setTimeout(() => {
                 dom.gameInput.value = '';
                 dom.gameInput.classList.remove('wrong');
+                isProcessingAnswer = false;
             }, 800);
         }
     }
@@ -154,6 +191,10 @@ export function checkAnswer() {
 }
 
 export function endGame() {
+    if (isEnding) return;
+    isEnding = true;
+    isProcessingAnswer = false;
+
     if (state.timerInterval) clearInterval(state.timerInterval);
     saveScore();
     dom.finalScore.textContent = state.score;

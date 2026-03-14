@@ -16,5 +16,6 @@ export const state = {
     playerName: '',
     playerClass: '2A',
     correctAnswer: 0,
-    currentQuestionText: ''
+    currentQuestionText: '',
+    gameLog: [] // Store a transcript of the game for server-side verification
 };

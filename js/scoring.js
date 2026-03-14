@@ -25,58 +25,42 @@ export async function loadAggregatedScores() {
 }
 
 export async function saveScore() {
-    const today = new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
-    const newScoreEntry = {
+    console.log("[Scoring] Submitting score for verification...");
+    
+    const payload = {
         name: state.playerName,
-        class: state.playerClass,
-        score: state.score,
+        playerClass: state.playerClass,
         mode: state.mode,
-        type: state.gameType,
-        date: today,
-        timestamp: Date.now() // Use local time for immediate cache update
+        gameType: state.gameType,
+        gameLog: state.gameLog
     };
 
     try {
-        // 1. Save FULL record for history (costs 1 write)
-        await addDoc(collection(db, "scores"), {
-            ...newScoreEntry,
-            timestamp: serverTimestamp()
-        });
-        
-        // 2. Update Aggregated Leaderboard (Top 5)
-        const leaderboardId = `${state.mode}_${state.gameType}`;
-        const docRef = doc(db, "leaderboards", leaderboardId);
-        
-        const docSnap = await getDoc(docRef);
-        let currentTopScores = [];
-        
-        if (docSnap.exists()) {
-            currentTopScores = docSnap.data().topScores || [];
-        }
-        
-        // Add new score if it qualifies
-        currentTopScores.push({
-            name: newScoreEntry.name,
-            score: newScoreEntry.score
-        });
-        
-        // Sort and slice to Top 5
-        currentTopScores.sort((a, b) => b.score - a.score);
-        currentTopScores = currentTopScores.slice(0, 5);
-        
-        // Save back to Firestore (costs 1 write)
-        await setDoc(docRef, { topScores: currentTopScores });
+        // Replace with your actual Vercel deployment URL after you deploy!
+        // Example: https://math-master-p2.vercel.app/api/verify-score
+        const functionUrl = `/api/verify-score`; 
 
-        // Update local cache
-        const cacheKey = `${CACHE_KEY_PREFIX}${state.mode}_${state.gameType}`;
-        localStorage.setItem(cacheKey, JSON.stringify({ 
-            scores: currentTopScores, 
-            timestamp: Date.now() 
-        }));
+        const response = await fetch(functionUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            throw new Error(`Server responded with ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log(`[Firestore] Score verified and saved! Verified Score: ${result.verifiedScore}`);
         
-        console.log(`[Firestore] Leaderboard ${leaderboardId} updated.`);
+        // Update local state with the server-verified score just in case they differ
+        state.score = result.verifiedScore;
+        
     } catch (e) {
-        console.error(`[Firestore] Save Error:`, e);
+        console.error(`[Scoring] Verification Error:`, e);
+        // Fallback or error UI could go here
     }
 }
 
