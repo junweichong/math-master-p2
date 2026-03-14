@@ -87,11 +87,17 @@ export function renderHighScores(topScores) {
     };
     const typeLabel = state.scoreDisplayType.charAt(0).toUpperCase() + state.scoreDisplayType.slice(1);
     dom.scoreTitle.innerHTML = `High Scores (${typeLabel})<br><span class="score-mode">${titles[state.scoreDisplayMode] || state.scoreDisplayMode}</span>`;
+    
+    const escapeHTML = (str) => {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    };
 
     dom.scoreList.innerHTML = topScores.map((s, i) => `
         <li class="score-item">
             <span class="score-rank">${i + 1}.</span>
-            <span class="score-name">${s.name}</span>
+            <span class="score-name">${escapeHTML(s.name)}</span>
             <span class="score-val">${s.score}</span>
         </li>
     `).join('');
