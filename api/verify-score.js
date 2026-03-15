@@ -95,17 +95,20 @@ module.exports = async (req, res) => {
 
             topScores.push({ 
                 name, 
-                score: verifiedScore,
+                score: Number(verifiedScore),
                 id: scoreRef.id,
                 date: today
             });
-            topScores.sort((a, b) => b.score - a.score);
+
+            // Robust numeric sort to handle potentially malformed old data
+            topScores.sort((a, b) => Number(b.score) - Number(a.score));
             topScores = topScores.slice(0, 5);
 
+            console.log(`[API] Updating leaderboard ${leaderboardId}. New Top Scores:`, JSON.stringify(topScores));
             transaction.set(leaderboardRef, { topScores });
         });
 
-        return res.status(200).json({ success: true, verifiedScore });
+        return res.status(200).json({ success: true, verifiedScore, leaderboardId });
 
     } catch (error) {
         console.error("Verification error:", error);

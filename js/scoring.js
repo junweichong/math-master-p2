@@ -14,8 +14,10 @@ export async function loadAggregatedScores() {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
+            console.log(`[Firestore] Loaded leaderboard for ${leaderboardId}:`, docSnap.data().topScores);
             return docSnap.data().topScores || [];
         } else {
+            console.warn(`[Firestore] No leaderboard found for ${leaderboardId}`);
             return [];
         }
     } catch (e) {
@@ -54,7 +56,7 @@ export async function saveScore() {
         }
 
         const result = await response.json();
-        console.log(`[Firestore] Score verified and saved! Verified Score: ${result.verifiedScore}`);
+        console.log(`[Firestore] Score verified and saved! Verified Score: ${result.verifiedScore} for Leaderboard: ${result.leaderboardId}`);
         
         // Update local state with the server-verified score just in case they differ
         state.score = result.verifiedScore;
