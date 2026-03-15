@@ -80,7 +80,7 @@ module.exports = async (req, res) => {
         };
 
         // Save to main scores collection
-        await db.collection("scores").add(scoreEntry);
+        const scoreRef = await db.collection("scores").add(scoreEntry);
 
         // Update Leaderboard
         const leaderboardId = `${mode}_${gameType}`;
@@ -93,7 +93,12 @@ module.exports = async (req, res) => {
                 topScores = doc.data().topScores || [];
             }
 
-            topScores.push({ name, score: verifiedScore });
+            topScores.push({ 
+                name, 
+                score: verifiedScore,
+                id: scoreRef.id,
+                date: today
+            });
             topScores.sort((a, b) => b.score - a.score);
             topScores = topScores.slice(0, 5);
 
