@@ -147,7 +147,7 @@ const imageCache = {};
 
 export function preloadAssets() {
     const imagesToLoad = [
-        ...Array.from({ length: 21 }, (_, i) => `${i}.png`), // 0.png through 20.png (0 might fall back to dots)
+        ...Array.from({ length: 20 }, (_, i) => `${i + 1}.png`), // 1.png through 20.png
         ...Array.from({ length: 11 }, (_, i) => `sub_${i}.png`) // sub_0.png through sub_10.png
     ];
 
