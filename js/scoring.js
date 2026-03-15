@@ -11,8 +11,16 @@ export async function loadAggregatedScores() {
     
     try {
         const docRef = doc(db, "leaderboards", leaderboardId);
-        // Force server fetch to avoid stale UI after score submission
-        const docSnap = await getDoc(docRef, { source: 'server' }).catch(() => getDoc(docRef)); 
+        
+        // Smart Refresh: Only force server fetch if we know the data has changed
+        let docSnap;
+        if (state.needsLeaderboardRefresh) {
+            console.log(`[Firestore] Forcing server fetch for ${leaderboardId}`);
+            docSnap = await getDoc(docRef, { source: 'server' }).catch(() => getDoc(docRef));
+            state.needsLeaderboardRefresh = false;
+        } else {
+            docSnap = await getDoc(docRef);
+        }
 
         if (docSnap.exists()) {
             console.log(`[Firestore] Loaded leaderboard for ${leaderboardId}:`, docSnap.data().topScores);
@@ -58,6 +66,9 @@ export async function saveScore() {
 
         const result = await response.json();
         console.log(`[Firestore] Score verified and saved! Verified Score: ${result.verifiedScore} for Leaderboard: ${result.leaderboardId}`);
+        
+        // Flag that we need a fresh fetch from the server next time we load scores
+        state.needsLeaderboardRefresh = true;
         
         // Update local state with the server-verified score just in case they differ
         state.score = result.verifiedScore;

@@ -17,5 +17,6 @@ export const state = {
     playerClass: '2A',
     correctAnswer: 0,
     currentQuestionText: '',
-    gameLog: [] // Store a transcript of the game for server-side verification
+    gameLog: [], // Store a transcript of the game for server-side verification
+    needsLeaderboardRefresh: false // Flag to force server-side fetch only when needed
 };
