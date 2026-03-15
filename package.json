@@ -6,6 +6,7 @@
     "start": "echo \"Static site run via index.html\""
   },
   "dependencies": {
-    "firebase-admin": "^11.8.0"
+    "firebase-admin": "^11.8.0",
+    "protobufjs": "^7.2.4"
   }
 }
