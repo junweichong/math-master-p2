@@ -11,7 +11,8 @@ export async function loadAggregatedScores() {
     
     try {
         const docRef = doc(db, "leaderboards", leaderboardId);
-        const docSnap = await getDoc(docRef);
+        // Force server fetch to avoid stale UI after score submission
+        const docSnap = await getDoc(docRef, { source: 'server' }).catch(() => getDoc(docRef)); 
 
         if (docSnap.exists()) {
             console.log(`[Firestore] Loaded leaderboard for ${leaderboardId}:`, docSnap.data().topScores);

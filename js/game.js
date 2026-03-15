@@ -190,13 +190,13 @@ export function checkAnswer() {
     updateGameUI();
 }
 
-export function endGame() {
+export async function endGame() {
     if (isEnding) return;
     isEnding = true;
     isProcessingAnswer = false;
 
     if (state.timerInterval) clearInterval(state.timerInterval);
-    saveScore();
+    await saveScore(); 
     dom.finalScore.textContent = state.score;
     dom.resultPlayer.textContent = `Good job, ${state.playerName}!`;
     showScreen('gameover');
